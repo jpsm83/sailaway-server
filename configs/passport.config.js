@@ -21,7 +21,7 @@ module.exports = (app) => {
     .then(user => {
       if(!user){
         // first param error, second user, third message
-        return next(null, false, { message: 'Usuario o contraseña incorrectos.'});
+        return next(null, false, { message: 'User not founded!'});
       }
 
       if(bcrypt.compareSync(password, user.password)){
@@ -29,7 +29,7 @@ module.exports = (app) => {
         return next(null, user);
       } else {
         // passport is a middleware so it needs 'next' to execute returns
-        return next(null, false, { message: 'Usuario o contraseña incorrectos'});
+        return next(null, false, { message: 'Password or email incorrect!'});
       }
     }) 
     // passport is a middleware so it needs 'next' to execute returns

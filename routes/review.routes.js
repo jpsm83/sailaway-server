@@ -5,6 +5,7 @@ const router = express.Router();
 router.get("/", (req, res, next) => {
   // get the to dos from a user that is loggedin using req.user.id
   Review.find({ boat: req.boat.id })
+    .populate("Reviews")
     .then((reviews) => res.status(200).json(reviews))
     .catch((err) => res.status(500).json(err));
 });
@@ -12,12 +13,12 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   // find a especific to do from a user that is loggedin using req.user.id
-  Review.findOne({ _id: id, boat: req.boat.id })
+  Review.findOne({ _id: id })
     .then((review) => res.status(200).json(review))
     .catch((err) => res.status(500).json(err));
 });
 
-router.post("/reviews", (req, res, next) => {
+router.post("/", (req, res, next) => {
   const { review, stars } = req.body;
 
   if (!req.body) {
@@ -26,8 +27,7 @@ router.post("/reviews", (req, res, next) => {
   }
   Review.create({
     review,
-    stars,
-    boat: req.boat.id,
+    stars
   })
     .then((review) => res.status(200).json(review))
     .catch((err) => res.status(500).json(err));
@@ -35,7 +35,7 @@ router.post("/reviews", (req, res, next) => {
 
 router.put("/:id", (req, res, next) => {
   const { id } = req.params;
-  Review.findOneAndUpdate({ _id: id, boat: req.boat.id }, req.body, {
+  Review.findOneAndUpdate({ _id: id, boat: req.boat.id, user: req.user.id}, req.body, {
     new: true,
   })
     .then((review) => res.status(200).json(review))
@@ -44,7 +44,7 @@ router.put("/:id", (req, res, next) => {
 
 router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
-  Review.findOneAndRemove({ _id: id, boat: req.boat.id })
+  Review.findOneAndRemove({ _id: id, boat: req.boat.id, user: req.user.id})
     .then(() => res.status(200).json({ message: `Review deleted` }))
     .catch((err) => res.status(500).json(err));
 });

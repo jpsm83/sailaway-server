@@ -3,15 +3,15 @@ const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema(
   {
-    author: {
+    user: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User"
     },
     review: { type: String, maxlength: 5000, required: true },
     stars: { type: Number, required: true },
     boat: {
       type: Schema.Types.ObjectId,
-      ref: "boat",
+      ref: "Boat"
     },
   },
   {

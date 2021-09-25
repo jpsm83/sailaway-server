@@ -10,17 +10,14 @@ const bcrypt = require("bcryptjs");
 const uploader = require("../configs/cloudinary.config");
 const bcryptSalt = 10;
 
-router.post("/signup", (req, res, next) => {
+router.get("/signup", (req, res, next) => {
   const { username, email, password } = req.body;
-
   // validators have to be equal to validators from frontend
-  if (password.length < 3) {
+  if (password.length < 5) {
     // error 400 - bad request
-    return res
-      .status(400)
-      .json({
-        message: "Please make your password at least 3 characters long",
-      });
+    return res.status(400).json({
+      message: "Please make your password at least 5 characters long",
+    });
   }
 
   if (!username || !email) {
@@ -43,7 +40,7 @@ router.post("/signup", (req, res, next) => {
       username,
       email,
       // encrypted password
-      password: hashPass,
+      password: hashPass
     })
       .then((newUser) => {
         // Passport req.login permite iniciar sesión tras crear el usuario
@@ -95,7 +92,6 @@ router.post("/logout", (req, res, next) => {
 
 // cloudnary router for upload photo???
 router.put("/edit", uploader.single("photo"), (req, res, next) => {
-  console.log(req.file);
   User.findOneAndUpdate(
     { _id: req.user.id },
     { ...req.body, photo: req.file ? req.file.path : req.user.photo },
