@@ -17,7 +17,7 @@ router.get("/:id", (req, res, next) => {
     .catch((err) => res.status(500).json(err));
 });
 
-router.post("/", (req, res, next) => {
+router.post("/reviews", (req, res, next) => {
   const { review, stars } = req.body;
 
   if (!req.body) {

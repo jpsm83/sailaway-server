@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const boatSchema = new Schema(
   {
     boatName: { type: String, maxlength: 100, required: true },
-    type: { type: Selection, required: true },
+    type: { type: String, required: true },
     image: { type: String },
     guestMax: { type: Number, required: true },
     guestMin: { type: Number, required: true },
@@ -14,10 +14,12 @@ const boatSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    review: {
-      type: Schema.Types.ObjectId,
-      ref: "Review",
-    },
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
   },
   {
     timestamps: true,
