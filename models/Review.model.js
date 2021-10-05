@@ -5,14 +5,15 @@ const reviewSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
     review: { type: String, maxlength: 5000, required: true },
     stars: { type: Number, required: true },
     boat: {
       type: Schema.Types.ObjectId,
-      ref: "Boat"
+      ref: "Boat",
     },
+    createdAt: { type: Date, default: () => Date.now()}
   },
   {
     timestamps: true,

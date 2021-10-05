@@ -11,6 +11,7 @@ module.exports = (app) => {
   // deserializeUser identify with user belongs the session
   passport.deserializeUser((id, cb) => {
     User.findById(id)
+    .populate("myBoats")
     .then(user => cb(null, user))
     .catch(error => cb(error))
   }); 
@@ -26,12 +27,12 @@ module.exports = (app) => {
 
       if(bcrypt.compareSync(password, user.password)){
         // passport is a middleware so it needs 'next' to execute returns
-        return next(null, user);
+        return next(null, user)
       } else {
         // passport is a middleware so it needs 'next' to execute returns
         return next(null, false, { message: 'Password or email incorrect!'});
       }
-    }) 
+    })
     // passport is a middleware so it needs 'next' to execute returns
     .catch((error) => next(error))
   }))

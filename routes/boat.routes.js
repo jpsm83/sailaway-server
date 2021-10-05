@@ -5,7 +5,8 @@ const router = express.Router();
 router.get("/", (req, res, next) => {
   // get the to dos from a user that is loggedin using req.user.id
   Boat.find({})
-    .populate("Reviews")
+    .populate("user")
+    .populate("reviews")
     .then((boats) => res.status(200).json(boats))
     .catch((err) => res.status(500).json(err));
 });
@@ -14,7 +15,8 @@ router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   // find a especific to do from a user that is loggedin using req.user.id
   Boat.findOne({ _id: id })
-    .populate("Reviews")
+    .populate("user")
+    .populate("reviews")
     .then((boat) => res.status(200).json(boat))
     .catch((err) => res.status(500).json(err));
 });
@@ -44,6 +46,8 @@ router.post("/", (req, res, next) => {
 router.put("/:id", (req, res, next) => {
   const { id } = req.params;
   Boat.findOneAndUpdate({ _id: id, user: req.user.id }, req.body, { new: true })
+    .populate("user")
+    .populate("reviews")
     .then((boat) => res.status(200).json(boat))
     .catch((err) => res.status(500).json(err));
 });

@@ -26,7 +26,8 @@ router.get("/signup", (req, res, next) => {
       .json({ message: "Please fill all the fields in the form" });
   }
 
-  User.findOne({ email }).then((user) => {
+  User.findOne({ email })
+  .then((user) => {
     if (user) {
       return res
         .status(400)
@@ -73,6 +74,13 @@ router.post("/login", (req, res, next) => {
       if (error) {
         return res.status(500).json(error);
       }
+      theUser.populate({
+        path: "myBoats",
+        populate: {
+          path: "reviews",
+          model: "Revies"
+        }
+      })
       return res.status(200).json(theUser);
     });
   })(
