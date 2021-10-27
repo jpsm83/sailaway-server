@@ -10,6 +10,9 @@ const boatSchema = new Schema(
     guestMin: { type: Number, required: true },
     size: { type: Number, required: true },
     description: { type: String, maxlength: 5000, required: true },
+    country: { type: String, required: true, maxlength: 100 },
+    city: { type: String, required: true, maxlength: 100 },
+    location: { type: String, required: true, maxlength: 1000 },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
