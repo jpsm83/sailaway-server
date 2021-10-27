@@ -1,14 +1,23 @@
 {
   "name": "sailaway-server",
   "version": "1.0.0",
+  "description": "A aplication to book boat trips",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www",
     "dev": "DEBUG=server:* nodemon ./bin/www"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpsm83/sailaway-server.git"
+  },
   "author": "Joao P S Machado",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpsm83/sailaway-server/issues"
+  },
+  "homepage": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -29,5 +38,7 @@
   "devDependencies": {
     "nodemon": "^2.0.7"
   },
-  "description": ""
+  "engines": {
+    "node": "15.8.0"
+  }
 }

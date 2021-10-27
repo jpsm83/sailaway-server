@@ -19,6 +19,7 @@ require("./configs/passport.config")(app);
 const authRouter = require("./routes/auth.routes");
 const boatRouter = require("./routes/boat.routes");
 const reviewRouter = require("./routes/review.routes");
+
 app.use("/api/auth", authRouter);
 app.use("/api/boat", boatRouter);
 app.use("/api/review", reviewRouter);
