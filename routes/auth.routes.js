@@ -10,8 +10,8 @@ const bcrypt = require("bcryptjs");
 const uploader = require("../configs/cloudinary.config");
 const bcryptSalt = 10;
 
-router.get("/signup", (req, res, next) => {
-  const { username, email, password } = req.body;
+router.post("/signup", (req, res, next) => {
+  const { username, email, password, photo } = req.body;
   // validators have to be equal to validators from frontend
   if (password.length < 5) {
     // error 400 - bad request
@@ -26,8 +26,7 @@ router.get("/signup", (req, res, next) => {
       .json({ message: "Please fill all the fields in the form" });
   }
 
-  User.findOne({ email })
-  .then((user) => {
+  User.findOne({ email }).then((user) => {
     if (user) {
       return res
         .status(400)
@@ -40,8 +39,9 @@ router.get("/signup", (req, res, next) => {
     User.create({
       username,
       email,
+      photo,
       // encrypted password
-      password: hashPass
+      password: hashPass,
     })
       .then((newUser) => {
         // Passport req.login permite iniciar sesión tras crear el usuario
@@ -74,21 +74,21 @@ router.post("/login", (req, res, next) => {
       if (error) {
         return res.status(500).json(error);
       }
+
       theUser.populate({
         path: "myBoats",
+        model: "Boat",
         populate: {
           path: "reviews",
-          model: "Revies"
-        }
-      })
+          model: "Review",
+        },
+      });
+
       return res.status(200).json(theUser);
     });
-  })(
-    // in this line, we are calling the function we just created for login
-    req,
-    res,
-    next
-  );
+  })
+  // in this line, we are calling the function we just created for login
+  (req,res,next);
 });
 
 router.post("/logout", (req, res, next) => {
@@ -99,12 +99,8 @@ router.post("/logout", (req, res, next) => {
 });
 
 // cloudnary router for upload photo???
-router.put("/edit", uploader.single("photo"), (req, res, next) => {
-  User.findOneAndUpdate(
-    { _id: req.user.id },
-    { ...req.body, photo: req.file ? req.file.path : req.user.photo },
-    { new: true }
-  )
+router.put("/edit-user", uploader.single("photo"), (req, res, next) => {
+  User.findOneAndUpdate({ _id: req.user.id }, { ...req.body, photo: req.file ? req.file.path : req.user.photo }, { new: true })
     .then((user) => res.status(200).json(user))
     .catch((error) => res.status(500).json(error));
 });

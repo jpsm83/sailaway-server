@@ -16,7 +16,7 @@ const userSchema = new Schema(
       ],
     },
     password: { type: String, required: true, minlength: 5 },
-    photo: { type: String },
+    photo: { type: String, default: 'https://img.favpng.com/8/19/8/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg' },
     myBoats: [
       {
         type: Schema.Types.ObjectId,
