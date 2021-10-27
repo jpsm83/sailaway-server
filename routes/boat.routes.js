@@ -44,8 +44,8 @@ router.post("/", (req, res, next) => {
     .then((boat) => {
       const userId = req.user.id
       User.findOneAndUpdate({ _id: userId }, { $push: {'myBoats': boat.id }}, { new: true })
-      .then((updateUser) => {
-        res.status(200).json(updateUser)
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser)
       })
       .catch((err) => res.status(500).json(err));
     })
@@ -67,8 +67,8 @@ router.delete("/:id", (req, res, next) => {
     .then(() => {
       const userId = req.user.id
       User.findOneAndUpdate({ _id: userId }, { $pull: {'myBoats': id }}, { new: true })
-      .then((updateUser) => {
-        res.status(200).json(updateUser)
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser)
       })
       .catch((err) => res.status(500).json(err));
     })

@@ -1,27 +1,25 @@
 const express = require("express");
 const Review = require("../models/Review.model");
+const Boat = require('../models/Boat.model');
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  // get the to dos from a user that is loggedin using req.user.id
-  // Review.find({ boat: req.boat.id })
+  // get the reviews
   Review.find({})
-    .populate("user")
     .then((reviews) => res.status(200).json(reviews))
     .catch((err) => res.status(500).json(err));
 });
 
 router.get("/:id", (req, res, next) => {
   const { id } = req.params;
-  // find a especific to do from a user that is loggedin using req.user.id
+  // find a especific review
   Review.findOne({ _id: id })
-    .populate("user")
     .then((review) => res.status(200).json(review))
     .catch((err) => res.status(500).json(err));
 });
 
 router.post("/", (req, res, next) => {
-  const { review, stars, createdAt } = req.body;
+  const { review, stars } = req.body;
 
   if (!req.body) {
     // error code 400 - bad request
@@ -30,27 +28,39 @@ router.post("/", (req, res, next) => {
   Review.create({
     review,
     stars,
-    createdAt: () => Date.now(),
     user: req.user.id,
   })
-    .then((review) => res.status(200).json(review))
+  .then((review) => {
+    const boatId = req.boat.id
+    Boat.findOneAndUpdate({ _id: boatId }, { $push: {'reviews': review.id }}, { new: true })
+    .then((updatedBoat) => {
+      res.status(200).json(updatedBoat)
+    })
+    .catch((err) => res.status(500).json(err));
+  })
     .catch((err) => res.status(500).json(err));
 });
 
 router.put("/:id", (req, res, next) => {
   const { id } = req.params;
-  Review.findOneAndUpdate({ _id: id, user: req.user.id }, req.body, {
-    new: true,
-  })
-    .populate("user")
+  // find a review and let only the owner of it update it using req.user.id
+  Review.findOneAndUpdate({ _id: id, user: req.user.id }, req.body, { new: true })
     .then((review) => res.status(200).json(review))
     .catch((err) => res.status(500).json(err));
 });
 
 router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
+  // find a review and let only the owner of it delete it using req.user.id
   Review.findOneAndRemove({ _id: id, user: req.user.id })
-    .then(() => res.status(200).json({ message: `Review deleted` }))
+  .then(() => {
+    const boatId = req.boat.id
+    Boat.findOneAndUpdate({ _id: boatId }, { $pull: {'reviews': id }}, { new: true })
+    .then((updatedBoat) => {
+      res.status(200).json(updatedBoat)
+    })
+    .catch((err) => res.status(500).json(err));
+  })
     .catch((err) => res.status(500).json(err));
 });
 
